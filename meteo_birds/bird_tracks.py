@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List
 import pandas as pd
-from opera_retrieval.diagnostics import compute_heading
+from meteo_birds.diagnostics import compute_heading
 
 @dataclass
 class BirdPoint:

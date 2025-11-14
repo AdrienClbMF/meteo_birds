@@ -1,6 +1,6 @@
 import requests
 from pathlib import Path
-from opera_retrieval.settings import (
+from meteo_birds.settings import (
     API_KEY,
     RADAR_DATA_PATH
 )

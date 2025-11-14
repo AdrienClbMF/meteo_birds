@@ -2,9 +2,9 @@ from dataclasses import dataclass, field
 from typing import List, Literal
 import os
 from datetime import datetime
-from opera_retrieval.settings import API_BASE_URL, RADAR_DATA_PATH
-from opera_retrieval.utils import get_api_data
-from opera_retrieval.formatting import radar_tar_to_dataset
+from meteo_birds.settings import API_BASE_URL, RADAR_DATA_PATH
+from meteo_birds.utils import get_api_data
+from meteo_birds.formatting import radar_tar_to_dataset
 import xarray as xr
 
 @dataclass

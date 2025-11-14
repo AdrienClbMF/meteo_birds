@@ -52,11 +52,11 @@ Outils d’analyse géométrique :
 
 - Extraction d’un **cône** défini par :
   - un sommet (position de l’oiseau),
+  - un cap (direction, cap de l'oiseau),
   - un rayon,
-  - un cap (direction),
   - un angle d’ouverture (réparti symétriquement autour du cap).
 - Permet d’extraire les pixels radar situés dans le **“cône de vision”** de l’oiseau.
-- Calcul de statistiques sur ce sous-ensemble (intensité convective moyenne, maximum, etc.).
+- Calcul de statistiques sur ce sous-ensemble (intensité convective moyenne, maximum, quantiles, etc.).
 
 ---
 
@@ -72,7 +72,7 @@ Configuration centralisée :
 
 ## 📁 Organisation des dossiers
 ```
-météobirds/
+meteobirds/
 │
 ├── open_data_server.py # Téléchargement et gestion des données OPERA
 ├── formatting.py # Extraction ODIM, conversion xarray, export GeoTIFF

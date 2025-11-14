@@ -10,8 +10,8 @@ import rasterio
 import rioxarray
 import xarray as xr
 from pyproj import CRS, Proj, Transformer
-from opera_retrieval.settings import RADAR_DATA_PATH
-from opera_retrieval.utils import dat_to_dat_half
+from meteo_birds.settings import RADAR_DATA_PATH
+from meteo_birds.utils import dat_to_dat_half
 
 def odim_hdf5_to_dataset(
         hdf5_file: h5py.File, 
