@@ -96,6 +96,35 @@ pip install -r requirements.txt
 ```
 ---
 
+## ⚡ Pré-requis API et accès aux données
+
+### 1. API Météo-France
+
+Pour utiliser les fonctionnalités nécessitant l’API Météo-France :
+
+1. Créez un compte sur le portail officiel : [https://portail-api.meteofrance.fr/web/fr/](https://portail-api.meteofrance.fr/web/fr/).
+2. Une fois connecté, générez votre **token d’accès** (une longue string unique).
+3. Stockez cette string dans un fichier texte dédié dans le dossier `credentials/` de votre projet.  
+   Exemple :
+   ```
+   credentials/mf_api_token.txt
+   ```
+4. Assurez-vous que le fichier est bien référencé dans `settings.py` pour que l’API puisse l’utiliser automatiquement.
+
+> 🔒 Ne partagez jamais ce fichier ou le token sur GitHub ou des plateformes publiques.
+
+---
+
+### 2. Accès aux données OPERA
+
+Les mosaïques radar OPERA nécessitent une autorisation spécifique :
+
+1. Contactez un administrateur ou la personne en charge des accès OPERA.
+2. Envoyez une demande par mail en précisant votre projet et vos besoins.
+3. Une fois l’accès accordé, vous pourrez télécharger les archives radar Europe (`.tar`) et les stocker localement dans le dossier `data_radar/`.
+
+> 💡 Astuce : Conservez les fichiers `.tar` bruts pour un traitement ultérieur avec les utilitaires de `formatting.py` afin de reconstruire les `xarray.Dataset`.
+
 
 ## 🗺️ Utilisation dans QGIS
 
