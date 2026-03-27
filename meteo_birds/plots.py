@@ -23,7 +23,7 @@ RFLC_CM = mcolors.ListedColormap(colors)
 
 
 def add_ground_elevation(
-        ax: plt.Axes, 
+        ax: plt.Axes,
         crs: ccrs.CRS) -> None:
     """
     Ajoute le relief ETOPO1 Bedrock sur un axe Cartopy.
@@ -39,31 +39,66 @@ def add_ground_elevation(
         return
 
     # ouvrir le fichier
-    ds = xr.open_dataset(GRD_ELEVATION_FILEPATH)
-    z = ds["z"]
-
-    # définir l'extent global
-    extent = [-180, 180, -90, 90]
+    try:
+        ds = xr.open_dataset(GRD_ELEVATION_FILEPATH)
+        z = ds["z"]
+    except Exception as e:
+        print(f"Erreur lors de l'ouverture du fichier de relief: {e}")
+        return
 
     # récupérer l'étendue actuelle de l'axe pour zoom
     try:
         lon_min, lon_max, lat_min, lat_max = ax.get_extent(crs)
+        # S'assurer que l'étendue est dans les limites valides
+        lon_min = max(-180, lon_min)
+        lon_max = min(180, lon_max)
+        lat_min = max(-90, lat_min)
+        lat_max = min(90, lat_max)
         extent = [lon_min, lon_max, lat_min, lat_max]
-    except Exception:
-        pass  # si get_extent échoue, on prend tout le globe
+    except (ValueError, AttributeError) as e:
+        print(f"Erreur lors de la récupération de l'extension de la carte: {e}")
+        return
 
-    # tracer le relief avec imshow
-    ax.imshow(
-        z.values.T,        # transpose pour que x=lon, y=lat
-        origin="lower",
-        extent=extent,
-        transform=crs,
-        cmap="gist_earth",    # remplacer par une cmap plus discrète si besoin
-        vmin=0,
-        vmax=8000,
-        alpha=0.5,         # permet de superposer le radar
-        zorder=0
-    )
+    # Extraire la portion du raster correspondant à l'étendue actuelle
+    try:
+        # Extraire les données dans l'étendue spécifiée
+        z_subset = z.sel(x=slice(lon_min, lon_max), y=slice(lat_min, lat_max))
+        
+        # Convertir en valeurs numpy
+        z_values = z_subset.values
+        z_values[z_values < 0] = np.nan
+
+        # Pour les fichiers ETOPO1 de haute résolution, on peut sous-échantillonner pour améliorer les performances
+        # On utilise un facteur de sous-échantillonnage approprié
+        if z_values.shape[0] > 2000:  # Si plus de 2000 lignes
+            # Calculer un facteur de sous-échantillonnage raisonnable basé sur l'étendue
+            # Pour éviter les problèmes de performance, on limite à 2000x4000 pixels
+            factor_y = max(1, z_values.shape[0] // 2000)
+            factor_x = max(1, z_values.shape[1] // 4000)
+            
+            # Appliquer le sous-échantillonnage
+            z_values = z_values[::factor_y, ::factor_x]
+        
+        # tracer le relief avec imshow
+        ax.imshow(
+            z_values,
+            origin="lower",
+            extent=extent,
+            transform=crs,
+            cmap="terrain",    # remplacer par une cmap plus discrète si besoin
+            vmin=-1400,
+            vmax=4800,
+            alpha=0.5,         # permet de superposer le radar
+            zorder=0
+        )
+    except Exception as e:
+        print(f"Erreur lors du tracé du relief: {e}")
+    finally:
+        # Fermer proprement le dataset
+        try:
+            ds.close()
+        except:
+            pass
 
 def plot_radar_time_dataset(
     ds: xr.Dataset,
