@@ -55,3 +55,20 @@ API_KEY = get_api_key(CREDS_PATH)
 
 SPAIN_BBOX = (-10,5,35,45)
 CANTABRICS_BBOX = (-12,5,40,47)
+
+# BIRDS PATH CSV FMT
+###################################
+FMT_1 = {
+    "separator" : ",",
+    "dat_fmt" : "%Y-%m-%d %H:%M:%S"
+}
+
+FMT_2 = {
+    "separator" : ";",
+    "dat_fmt" : "%d/%m/%Y %H:%M"
+}
+
+AVAILABLE_BIRDS_FMT = {
+    1 : FMT_1,
+    2 : FMT_2
+}
