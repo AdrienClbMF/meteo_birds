@@ -9,9 +9,17 @@ RADAR_DATA_PATH = (BASE_DIR / "../data_radar").resolve()
 
 # Path to the birds data directory
 BIRDS_DATA_PATH = (BASE_DIR / "../data_birds").resolve()
+BIRDS_DEFAULT_CSV = BIRDS_DATA_PATH / "complete_data_thinned.csv"
 
 # Path to the output geotiffs data directory
 GEOTIFF_OUTPUT_PATH = (BASE_DIR / "../output_geotiffs").resolve()
+
+# Path to figures
+FIGURES_PATH = (BASE_DIR / "../figures").resolve()
+
+# GROUND ELEVATION PATH
+GRD_ELEVATION_FILEPATH = Path("/media/adrien/HDD-FILES2/Development/static_data/ETOPO1_Bed_g_gmt4.grd")
+
 
 # API main adress
 ################################################
