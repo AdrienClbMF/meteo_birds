@@ -9,6 +9,7 @@ from typing import Dict
 from datetime import datetime, timedelta
 from typing import List
 import os
+import pandas as pd
 
 
 
@@ -97,14 +98,45 @@ def dat_to_dat_half(dat):
     return dat.replace(hour=hour)
 
 def dat_to_5mn(dat):
-    # Nombre total de secondes depuis le début de l'heure
-    total_seconds = dat.minute * 60 + dat.second + dat.microsecond / 1e6
-    remainder = total_seconds % (5 * 60)
+     # Nombre total de secondes depuis le début de l'heure
+     total_seconds = dat.minute * 60 + dat.second + dat.microsecond / 1e6
+     remainder = total_seconds % (5 * 60)
 
-    # Décide si on arrondit vers le bas ou vers le haut
-    if remainder < (2.5 * 60):
-        new_time = dat - timedelta(seconds=remainder)
-    else:
-        new_time = dat + timedelta(seconds=(5 * 60 - remainder))
+     # Décide si on arrondit vers le bas ou vers le haut
+     if remainder < (2.5 * 60):
+         new_time = dat - timedelta(seconds=remainder)
+     else:
+         new_time = dat + timedelta(seconds=(5 * 60 - remainder))
 
-    return new_time.replace(second=0, microsecond=0)
+     return new_time.replace(second=0, microsecond=0)
+
+
+def process_birds_data(csv_path):
+    """
+    Traite les données oiseaux à partir d'un fichier CSV et ajoute les colonnes
+    nécessaires pour les lier aux données radar.
+    
+    Args:
+        csv_path (str or Path): Chemin vers le fichier CSV contenant les données oiseaux
+        
+    Returns:
+        pandas.DataFrame: DataFrame avec les colonnes supplémentaires ajoutées
+    """
+
+    
+    # Lecture du fichier CSV
+    birds_df = pd.read_csv(csv_path)
+    
+    # Conversion de la colonne UTC_datetime en datetime
+    birds_df['UTC_datetime'] = birds_df['UTC_datetime'].apply(lambda str: datetime.fromisoformat(str))
+    
+    # Ajout de la colonne RADAR_archive_dat
+    birds_df['RADAR_archive_dat'] = birds_df['UTC_datetime'].apply(lambda dat: dat_to_dat_half(dat))
+    
+    # Ajout de la colonne RADAR_archive_fn
+    birds_df['RADAR_archive_fn'] = birds_df['RADAR_archive_dat'].apply(lambda dat: f"OPERA_cirrus_REFLECTIVITY_{dat.strftime('%Y-%m-%dT%H')}0000.tar")
+    
+    # Ajout de la colonne RADAR_hdf5_dat
+    birds_df['RADAR_hdf5_dat'] = birds_df['UTC_datetime'].apply(lambda dat: dat_to_5mn(dat))
+    
+    return birds_df
