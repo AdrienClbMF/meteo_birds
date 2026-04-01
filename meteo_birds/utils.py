@@ -118,9 +118,13 @@ def process_birds_data(csv_path, csv_fmt_type : int = 1):
     
     Args:
         csv_path (str or Path): Chemin vers le fichier CSV contenant les données oiseaux
+        csv_fmt_type (int, optional): Type de format CSV à utiliser. Par défaut 1.
         
     Returns:
-        pandas.DataFrame: DataFrame avec les colonnes supplémentaires ajoutées
+        pandas.DataFrame: DataFrame avec les colonnes supplémentaires ajoutées :
+            - RADAR_archive_dat : date arrondie à la demi-journée
+            - RADAR_archive_fn : nom de fichier radar associé
+            - RADAR_hdf5_dat : date arrondie aux 5 minutes
     """
     
     # Lecture du fichier CSV avec le séparateur détecté
